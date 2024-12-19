@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<launch>
+  <node name="seekthermalpro" pkg="seekthermal_camera" type="seekthermal_node" output="screen">
+    <param name="type" value="seek"/>
+    <param name="camera_name" value="seek"/>
+    <param name="frame_id" value="seek_optical"/>
+    <param name="ffc_image" value="$(find seekthermal_camera)/data/ffc.png"/>
+  </node>
+</launch>

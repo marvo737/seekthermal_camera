@@ -1,9 +1,15 @@
-cmake_minimum_required(VERSION 3.0)
+cmake_minimum_required(VERSION 3.0.2)
 project(libseek_thermal_lite)
+
+add_compile_options(-std=c++14)
 
 # libusb-1.0-dev
 find_library(_USB_LIB usb-1.0)
-find_path(_USB_INCLUDE NAMES libusb.h PATH_SUFFIXES libusb-1.0)
+find_path(
+  _USB_INCLUDE
+  NAMES libusb.h
+  PATH_SUFFIXES libusb-1.0
+)
 
 if(_USB_LIB AND _USB_INCLUDE)
   add_library(Usb INTERFACE)
@@ -14,9 +20,15 @@ else()
 endif()
 
 # OpenCV 3+
-find_package(OpenCV 3 REQUIRED COMPONENTS core imgproc)
+find_package(
+  OpenCV
+  4
+  REQUIRED
+  COMPONENTS core imgproc
+)
 
-add_library(seek_thermal STATIC
+add_library(
+  seek_thermal STATIC
   src/SeekCam.cpp
   src/SeekDevice.cpp
   src/SeekThermal.cpp
@@ -24,17 +36,14 @@ add_library(seek_thermal STATIC
   src/SeekLogging.cpp
 )
 
-target_include_directories(seek_thermal
-  PRIVATE
-    include/seek_thermal
-  PUBLIC
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-    $<INSTALL_INTERFACE:include>
-    ${OpenCV_INCLUDE_DIRS}
+target_include_directories(
+  seek_thermal
+  PRIVATE include/seek_thermal
+  PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+         $<INSTALL_INTERFACE:include>
+         ${OpenCV_INCLUDE_DIRS}
 )
 
 target_link_libraries(seek_thermal PUBLIC Usb ${OpenCV_LIBS})
 
-target_compile_options(seek_thermal PRIVATE
-  -fpic -fPIC
-)
+target_compile_options(seek_thermal PRIVATE -fpic -fPIC)
